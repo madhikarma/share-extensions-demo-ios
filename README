@@ -1,0 +1,23 @@
+# Share Extension Demo iOS
+
+Sample app to deno use of iOS Share extensions
+
+## Setup
+
+- No dependencies
+
+## Usage
+
+### App
+- Build and run ShareDemo target in Xcode (14.2) to device or simulator
+
+### Extension
+- Build and run ShareDemoExt target in Xcode (14.2) to device or simulator
+
+### Note
+- Share extension have limited debugging only be debugged via console
+
+## Links
+
+- https://medium.com/@damisipikuda/how-to-receive-a-shared-content-in-an-ios-application-4d5964229701
+- https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/Share.html

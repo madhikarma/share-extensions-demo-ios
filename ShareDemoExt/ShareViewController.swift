@@ -64,7 +64,7 @@ class ShareViewController: UIViewController {
                 }
             }
 
-            self.openMainApp()
+//            self.openMainApp()
         }
     }
 
@@ -76,7 +76,8 @@ class ShareViewController: UIViewController {
                 self.saveURLString(urlString)
             }
 
-            self.openMainApp()
+//            self.openMainApp()
+            self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
         }
     }
 
@@ -106,7 +107,8 @@ class ShareViewController: UIViewController {
             }
         }
 
-        openMainApp()
+//        openMainApp()
+        extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
     }
 
     private func saveURLString(_ urlString: String) {

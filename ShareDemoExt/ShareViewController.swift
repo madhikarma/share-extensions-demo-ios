@@ -8,15 +8,22 @@
 import CoreServices
 import Social
 import UIKit
-
-import CoreServices
-import Social
-import UIKit
+import UniformTypeIdentifiers
 
 class ShareViewController: UIViewController {
     private let typeText = String(kUTTypeText)
     private let typeURL = String(kUTTypeURL)
     private let typeImage = String(kUTTypeImage)
+
+    // MARK: - Init & Deinit
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -32,13 +39,18 @@ class ShareViewController: UIViewController {
             handleIncomingText(itemProvider: itemProvider)
         } else if itemProvider.hasItemConformingToTypeIdentifier(typeURL) {
             handleIncomingURL(itemProvider: itemProvider)
-        } else if itemProvider.hasItemConformingToTypeIdentifier(typeImage) {
+        } else if itemProvider.hasItemConformingToTypeIdentifier(UTType.jpeg.identifier) ||
+            itemProvider.hasItemConformingToTypeIdentifier(UTType.png.identifier) ||
+            itemProvider.hasItemConformingToTypeIdentifier(UTType.image.identifier)
+        {
             handleIncomingImage(itemProvider: itemProvider)
         } else {
             print("Error: No url or text found")
-            extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+//            extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
         }
     }
+
+    // MARK: - Setup
 
     private func handleIncomingText(itemProvider: NSItemProvider) {
         itemProvider.loadItem(forTypeIdentifier: typeText, options: nil) { item, error in
@@ -81,7 +93,7 @@ class ShareViewController: UIViewController {
     }
 
     private func handleIncomingImage(itemProvider: NSItemProvider) {
-        itemProvider.loadItem(forTypeIdentifier: typeImage, options: nil) { item, error in
+        itemProvider.loadItem(forTypeIdentifier: UTType.image.identifier, options: nil) { item, error in
             if let error = error { print("Image-Error: \(error.localizedDescription)") }
 
             var image: UIImage?
@@ -97,7 +109,12 @@ class ShareViewController: UIViewController {
 //                }
                 ////
                 ////
-                let compressedImageData = someImage.jpegData(compressionQuality: 1)
+                ///
+                let originalImage = someImage
+                let resizingFactor = 100 / originalImage.size.height
+                let newImage = UIImage(cgImage: originalImage.cgImage!, scale: originalImage.scale / resizingFactor, orientation: .up)
+                // let newImage = someImage
+                let compressedImageData = newImage.jpegData(compressionQuality: 1)
 //                guard (try? compressedImageData?.write(to: compressedImagePath)) != nil else {
 //                    return
 //                }
@@ -106,7 +123,7 @@ class ShareViewController: UIViewController {
 
                 let encoded = try! PropertyListEncoder().encode(compressedImageData)
                 userDefaults.set(encoded, forKey: imageDefaultName)
-                UserDefaults(suiteName: groupName)?.synchronize()
+                userDefaults.synchronize()
 
             } else {
                 print("bad share data")

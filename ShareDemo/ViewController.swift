@@ -82,7 +82,8 @@ final class ViewController: UIViewController {
             let decoded = try! PropertyListDecoder().decode(Data.self, from: incomingImageData)
             let image = UIImage(data: decoded)
             imageView.image = image
-//            defaults.removeObject(forKey: "incomingImage")
+            userDefaults.removeObject(forKey: imageDefaultName)
+            userDefaults.synchronize()
         } else {
 //            let path = URL.urlInDocumentsDirectory(with: "shareImage.jpg").path
 //            let image = UIImage(contentsOfFile: path)
@@ -92,7 +93,8 @@ final class ViewController: UIViewController {
 
         if let text = userDefaults.value(forKey: textDefaultName) as? String {
             urlTextField.text = text
-//            defaults.removeObject(forKey: textDefaultName)
+            userDefaults.removeObject(forKey: textDefaultName)
+            userDefaults.synchronize()
         }
     }
 }

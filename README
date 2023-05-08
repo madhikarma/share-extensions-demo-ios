@@ -1,6 +1,10 @@
 # Share Extension Demo iOS
 
+![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white) ![Swift](https://img.shields.io/badge/swift-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
+
 Sample app to deno use of iOS Share extensions
+
+-----------------------
 
 ## Setup
 
@@ -21,3 +25,7 @@ Sample app to deno use of iOS Share extensions
 
 - https://medium.com/@damisipikuda/how-to-receive-a-shared-content-in-an-ios-application-4d5964229701
 - https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/Share.html
+- https://medium.com/@damisipikuda/how-to-receive-a-shared-content-in-an-ios-application-4d5964229701
+- https://stackoverflow.com/questions/32456738/why-do-larger-images-not-appear-in-a-share-extension-or-action-extension/32456739#32456739
+- https://developer.apple.com/forums/thread/16887
+- https://medium.com/macoclock/ios-share-extension-swift-5-1-1606263746b

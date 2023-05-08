@@ -20,6 +20,7 @@ class ShareViewController: UIViewController {
     private let appURL = "ShareExtension101://"
     private let groupName = "group.madhikarma.ShareDemo"
     private let urlDefaultName = "incomingURL"
+    private let imageDefaultName = "incomingImage"
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -95,14 +96,21 @@ class ShareViewController: UIViewController {
             }
 
             if let someImage = image {
-                guard let compressedImagePath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("shareImage.jpg", isDirectory: false) else {
-                    return
-                }
-
+//                guard let compressedImagePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("shareImage.jpg", isDirectory: false) else {
+//                    return
+//                }
+                ////
+                ////
                 let compressedImageData = someImage.jpegData(compressionQuality: 1)
-                guard (try? compressedImageData?.write(to: compressedImagePath)) != nil else {
-                    return
-                }
+//                guard (try? compressedImageData?.write(to: compressedImagePath)) != nil else {
+//                    return
+//                }
+
+//                try! compressedImageData?.write(to: compressedImagePath, options: .atomic)
+
+                let encoded = try! PropertyListEncoder().encode(compressedImageData)
+                UserDefaults(suiteName: self.groupName)?.set(encoded, forKey: self.imageDefaultName)
+                UserDefaults(suiteName: self.groupName)?.synchronize()
 
             } else {
                 print("bad share data")

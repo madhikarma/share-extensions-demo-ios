@@ -9,7 +9,8 @@ import UIKit
 
 final class ViewController: UIViewController {
     private let urlTextField = UITextField()
-    private let groupName = "group.madhikarma.ShareDemo"
+
+    private let imageView = UIImageView()
 
     // MARK: - Init & Deinit
 
@@ -34,12 +35,21 @@ final class ViewController: UIViewController {
             urlTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
         urlTextField.text = "Hello World"
+
+        view.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: urlTextField.bottomAnchor),
+
+        ])
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         setUrl()
+        setImage()
     }
 
     // MARK: - Setup
@@ -47,7 +57,7 @@ final class ViewController: UIViewController {
     func setupNotification() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(setUrl),
+            selector: #selector(updateUI),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
@@ -55,12 +65,38 @@ final class ViewController: UIViewController {
 
     // MARK: - Actions
 
-    @objc func setUrl() {
-        let defaults = UserDefaults(suiteName: groupName)
+    private func setUrl() {
+        let defaults = UserDefaults(suiteName: groupName)!
 
-        if let incomingURL = defaults?.value(forKey: "incomingURL") as? String {
+        if let incomingURL = defaults.value(forKey: urlDefaultName) as? String {
             urlTextField.text = incomingURL
-            UserDefaults().removeObject(forKey: "incomingURL")
+            defaults.removeObject(forKey: urlDefaultName)
+        }
+    }
+
+    @objc func updateUI() {
+        setUrl()
+        setImage()
+    }
+
+    private func setImage() {
+        let defaults = UserDefaults(suiteName: groupName)!
+
+        if let incomingImageData = defaults.value(forKey: imageDefaultName) as? Data {
+            let decoded = try! PropertyListDecoder().decode(Data.self, from: incomingImageData)
+            let image = UIImage(data: decoded)
+            imageView.image = image
+//            defaults.removeObject(forKey: "incomingImage")
+        } else {
+//            let path = URL.urlInDocumentsDirectory(with: "shareImage.jpg").path
+//            let image = UIImage(contentsOfFile: path)
+//            imageView.image = image
+//            defaults.removeObject(forKey: "incomingImage")
+        }
+
+        if let text = defaults.value(forKey: textDefaultName) as? String {
+            urlTextField.text = text
+//            defaults.removeObject(forKey: textDefaultName)
         }
     }
 }

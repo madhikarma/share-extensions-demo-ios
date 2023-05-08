@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.madhikarma.ShareDemo</string>
+		<string>group.com.madhikarma.ShareDemo</string>
 	</array>
 </dict>
 </plist>

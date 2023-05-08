@@ -66,11 +66,9 @@ final class ViewController: UIViewController {
     // MARK: - Actions
 
     private func setUrl() {
-        let defaults = UserDefaults(suiteName: groupName)!
-
-        if let incomingURL = defaults.value(forKey: urlDefaultName) as? String {
+        if let incomingURL = userDefaults.value(forKey: urlDefaultName) as? String {
             urlTextField.text = incomingURL
-            defaults.removeObject(forKey: urlDefaultName)
+//            userDefaults.removeObject(forKey: urlDefaultName)
         }
     }
 
@@ -80,9 +78,7 @@ final class ViewController: UIViewController {
     }
 
     private func setImage() {
-        let defaults = UserDefaults(suiteName: groupName)!
-
-        if let incomingImageData = defaults.value(forKey: imageDefaultName) as? Data {
+        if let incomingImageData = userDefaults.value(forKey: imageDefaultName) as? Data {
             let decoded = try! PropertyListDecoder().decode(Data.self, from: incomingImageData)
             let image = UIImage(data: decoded)
             imageView.image = image
@@ -94,7 +90,7 @@ final class ViewController: UIViewController {
 //            defaults.removeObject(forKey: "incomingImage")
         }
 
-        if let text = defaults.value(forKey: textDefaultName) as? String {
+        if let text = userDefaults.value(forKey: textDefaultName) as? String {
             urlTextField.text = text
 //            defaults.removeObject(forKey: textDefaultName)
         }

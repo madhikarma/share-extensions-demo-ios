@@ -17,10 +17,6 @@ class ShareViewController: UIViewController {
     private let typeText = String(kUTTypeText)
     private let typeURL = String(kUTTypeURL)
     private let typeImage = String(kUTTypeImage)
-    private let appURL = "ShareExtension101://"
-    private let groupName = "group.madhikarma.ShareDemo"
-    private let urlDefaultName = "incomingURL"
-    private let imageDefaultName = "incomingImage"
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -109,8 +105,8 @@ class ShareViewController: UIViewController {
 //                try! compressedImageData?.write(to: compressedImagePath, options: .atomic)
 
                 let encoded = try! PropertyListEncoder().encode(compressedImageData)
-                UserDefaults(suiteName: self.groupName)?.set(encoded, forKey: self.imageDefaultName)
-                UserDefaults(suiteName: self.groupName)?.synchronize()
+                userDefaults.set(encoded, forKey: imageDefaultName)
+                UserDefaults(suiteName: groupName)?.synchronize()
 
             } else {
                 print("bad share data")
@@ -122,12 +118,12 @@ class ShareViewController: UIViewController {
     }
 
     private func saveURLString(_ urlString: String) {
-        UserDefaults(suiteName: groupName)?.set(urlString, forKey: urlDefaultName)
+        userDefaults.set(urlString, forKey: urlDefaultName)
     }
 
     private func openMainApp() {
         extensionContext?.completeRequest(returningItems: nil, completionHandler: { _ in
-            guard let url = URL(string: self.appURL) else { return }
+            guard let url = URL(string: appURL) else { return }
             _ = self.openURL(url)
         })
     }

@@ -12,3 +12,4 @@ let groupName = "group.com.madhikarma.ShareDemo"
 let urlDefaultName = "incomingURL"
 let imageDefaultName = "incomingImage"
 let textDefaultName = "incomingText"
+let userDefaults = UserDefaults(suiteName: groupName)!

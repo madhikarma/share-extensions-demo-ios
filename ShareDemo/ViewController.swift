@@ -9,6 +9,7 @@ import UIKit
 
 final class ViewController: UIViewController {
     private let urlTextField = UITextField()
+    private let groupName = "group.madhikarma.ShareDemo"
 
     // MARK: - Init & Deinit
 
@@ -55,7 +56,9 @@ final class ViewController: UIViewController {
     // MARK: - Actions
 
     @objc func setUrl() {
-        if let incomingURL = UserDefaults().value(forKey: "incomingURL") as? String {
+        let defaults = UserDefaults(suiteName: groupName)
+
+        if let incomingURL = defaults?.value(forKey: "incomingURL") as? String {
             urlTextField.text = incomingURL
             UserDefaults().removeObject(forKey: "incomingURL")
         }

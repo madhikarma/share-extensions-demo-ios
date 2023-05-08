@@ -18,7 +18,7 @@ class ShareViewController: UIViewController {
     private let typeURL = String(kUTTypeURL)
     private let typeImage = String(kUTTypeImage)
     private let appURL = "ShareExtension101://"
-    private let groupName = "group.ShareExtension101"
+    private let groupName = "group.madhikarma.ShareDemo"
     private let urlDefaultName = "incomingURL"
 
     override func viewDidAppear(_ animated: Bool) {
@@ -48,20 +48,21 @@ class ShareViewController: UIViewController {
             if let error = error { print("Text-Error: \(error.localizedDescription)") }
 
             if let text = item as? String {
-                do { // 2.1
-                    let detector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
-                    let matches = detector.matches(
-                        in: text,
-                        options: [],
-                        range: NSRange(location: 0, length: text.utf16.count)
-                    )
-                    // 2.2
-                    if let firstMatch = matches.first, let range = Range(firstMatch.range, in: text) {
-                        self.saveURLString(String(text[range]))
-                    }
-                } catch {
-                    print("Do-Try Error: \(error.localizedDescription)")
-                }
+//                do { // 2.1
+//                    let detector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+//                    let matches = detector.matches(
+//                        in: text,
+//                        options: [],
+//                        range: NSRange(location: 0, length: text.utf16.count)
+//                    )
+//                    // 2.2
+//                    if let firstMatch = matches.first, let range = Range(firstMatch.range, in: text) {
+//                        self.saveURLString(String(text[range]))
+//                    }
+//                } catch {
+//                    print("Do-Try Error: \(error.localizedDescription)")
+//                }
+                self.saveURLString(text)
             }
 
 //            self.openMainApp()

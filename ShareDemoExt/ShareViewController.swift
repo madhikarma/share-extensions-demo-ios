@@ -14,6 +14,7 @@ class ShareViewController: UIViewController {
     private let typeText = String(kUTTypeText)
     private let typeURL = String(kUTTypeURL)
     private let typeImage = String(kUTTypeImage)
+    private let textLabel = UILabel()
 
     // MARK: - Init & Deinit
 
@@ -21,8 +22,21 @@ class ShareViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
+    override func loadView() {
+        view = UIView()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        view.backgroundColor = .white
+        view.addSubview(textLabel)
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+        textLabel.text = "Share extension"
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -93,6 +107,10 @@ class ShareViewController: UIViewController {
     }
 
     private func handleIncomingImage(itemProvider: NSItemProvider) {
+        DispatchQueue.main.async {
+            self.textLabel.text = "Loading image..."
+        }
+
         itemProvider.loadItem(forTypeIdentifier: UTType.image.identifier, options: nil) { item, error in
             if let error = error { print("Image-Error: \(error.localizedDescription)") }
 
@@ -125,12 +143,72 @@ class ShareViewController: UIViewController {
                 userDefaults.set(encoded, forKey: imageDefaultName)
                 userDefaults.synchronize()
 
+                let url = URL(string: "https://mocki.io/v1/797c201d-bdbb-4c8f-ba0c-b06ea30a0e45")!
+                let urlRequest = URLRequest(url: url)
+                let task = URLSession.shared.dataTask(with: urlRequest) { data, _, error in
+                    if let error = error {
+                        print("error: \(error)")
+                        DispatchQueue.main.async {
+                            self.textLabel.text = "Error: \(error.localizedDescription)"
+                        }
+                    }
+
+                    var result: Result<String, Error>?
+                    var jsonObject: [String: AnyObject]?
+                    if let responseData = data {
+                        do {
+                            jsonObject = try JSONSerialization.jsonObject(with: responseData, options: .fragmentsAllowed) as? [String: AnyObject]
+                            print("json: \(String(describing: jsonObject))")
+                            if let status = jsonObject?["status"] as? String {
+                                result = .success(status)
+                                DispatchQueue.main.async {
+                                    self.textLabel.text = "Complete: \(status)"
+                                }
+                            }
+                        } catch let jsonError {
+                            print("jsonError: \(jsonError)")
+                            result = .failure(jsonError)
+                        }
+                    }
+
+                    DispatchQueue.main.async {
+                        let alertViewController: UIAlertController
+                        switch result {
+                        case let .success(text):
+                            let message = "Success: \(text) \(String(describing: jsonObject?.description))"
+                            self.textLabel.text = message
+                            alertViewController = UIAlertController(title: "Success", message: message, preferredStyle: .alert)
+                        case let .failure(error):
+                            let message = "Error: \(error.localizedDescription)"
+                            self.textLabel.text = message
+                            alertViewController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+                        case .none:
+                            let message = "Unknown"
+                            self.textLabel.text = message
+                            alertViewController = UIAlertController(title: "Unknown", message: message, preferredStyle: .alert)
+                        }
+
+                        let okAction = UIAlertAction(title: "Open app", style: .default) { _ in
+//                            self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+                            let url = URL(string: appURL)!
+                            self.openURL(url)
+                        }
+
+                        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                            self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+                        }
+                        alertViewController.addAction(okAction)
+                        alertViewController.addAction(cancelAction)
+                        self.present(alertViewController, animated: true)
+                    }
+                }
+                task.resume()
+
             } else {
                 print("bad share data")
             }
 
             //        openMainApp()
-            self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
         }
     }
 

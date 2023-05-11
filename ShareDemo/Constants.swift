@@ -7,7 +7,7 @@
 
 import Foundation
 
-let appURL = "ShareExtension101://"
+let appURL = "ShareDemo://"
 let groupName = "group.com.madhikarma.ShareDemo"
 let urlDefaultName = "incomingURL"
 let imageDefaultName = "incomingImage"

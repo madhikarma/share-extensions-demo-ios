@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func handleIncomingURL(_ url: URL) {
         if let scheme = url.scheme,
-           scheme.caseInsensitiveCompare("ShareExtension101") == .orderedSame,
+           scheme.caseInsensitiveCompare(appURL) == .orderedSame,
            let page = url.host
         {
             var parameters: [String: String] = [:]

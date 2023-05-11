@@ -34,7 +34,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         options _: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
         if let scheme = url.scheme,
-           scheme.caseInsensitiveCompare("ShareExtension101") == .orderedSame,
+           scheme.caseInsensitiveCompare(appURL) == .orderedSame,
            let page = url.host
         {
             var parameters: [String: String] = [:]
